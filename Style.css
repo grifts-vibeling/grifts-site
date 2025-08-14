@@ -32,19 +32,34 @@ h1 {
 }
 
 .grid {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 20px;
+  justify-content: center;
+  padding-top: 20px;
 }
 
 .tribe {
-  width: 150px;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 1rem;
+  text-align: center;
+  color: #f0f0f0;
+  box-shadow: 0 0 12px rgba(255, 0, 255, 0.2);
+  transition: transform 0.3s ease;
+}
+
+.tribe:hover {
+  transform: scale(1.05);
 }
 
 .tribe img {
   width: 100%;
+  max-width: 120px;
+  height: auto;
   border-radius: 8px;
+  margin-bottom: 0.5rem;
   box-shadow: 0 0 10px #444;
   transition: all 0.3s ease;
 }
@@ -52,6 +67,13 @@ h1 {
 .tribe:hover img {
   transform: scale(1.05);
   box-shadow: 0 0 15px var(--accent);
+}
+
+.lore {
+  font-size: 0.9em;
+  color: #ccc;
+  margin-top: 0.5rem;
+  font-style: italic;
 }
 
 .cta {
@@ -80,7 +102,7 @@ footer {
 /* Responsive tweaks */
 @media (max-width: 600px) {
   .tribe {
-    width: 100px;
+    width: 100%;
   }
 
   h1 {
