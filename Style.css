@@ -1,0 +1,50 @@
+body {
+  font-family: 'Helvetica', sans-serif;
+  background-color: #0f0f0f;
+  color: #f0f0f0;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+header {
+  padding: 40px 20px;
+  background: linear-gradient(to right, #111, #222);
+}
+
+h1 {
+  font-size: 2.5em;
+  margin-bottom: 10px;
+}
+
+#intro {
+  padding: 20px;
+  font-size: 1.2em;
+}
+
+#tribes {
+  padding: 30px;
+}
+
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.tribe {
+  width: 150px;
+}
+
+.tribe img {
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 0 10px #444;
+}
+
+footer {
+  padding: 20px;
+  font-size: 0.9em;
+  color: #aaa;
+}
