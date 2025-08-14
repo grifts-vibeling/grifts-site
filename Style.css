@@ -1,3 +1,7 @@
+:root {
+  --accent: #ff00aa;
+}
+
 body {
   font-family: 'Helvetica', sans-serif;
   background-color: #0f0f0f;
@@ -15,6 +19,7 @@ header {
 h1 {
   font-size: 2.5em;
   margin-bottom: 10px;
+  color: var(--accent);
 }
 
 #intro {
@@ -41,10 +46,48 @@ h1 {
   width: 100%;
   border-radius: 8px;
   box-shadow: 0 0 10px #444;
+  transition: all 0.3s ease;
+}
+
+.tribe:hover img {
+  transform: scale(1.05);
+  box-shadow: 0 0 15px var(--accent);
+}
+
+.cta {
+  background: var(--accent);
+  color: white;
+  padding: 0.6em 1.2em;
+  text-decoration: none;
+  border-radius: 6px;
+  box-shadow: 0 0 10px var(--accent);
+  transition: all 0.3s ease;
+  display: inline-block;
+  margin-top: 20px;
+}
+
+.cta:hover {
+  box-shadow: 0 0 20px var(--accent);
+  transform: scale(1.05);
 }
 
 footer {
   padding: 20px;
   font-size: 0.9em;
   color: #aaa;
+}
+
+/* Responsive tweaks */
+@media (max-width: 600px) {
+  .tribe {
+    width: 100px;
+  }
+
+  h1 {
+    font-size: 2em;
+  }
+
+  #intro {
+    font-size: 1em;
+  }
 }
