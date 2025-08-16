@@ -136,6 +136,32 @@ footer {
   color: #aaa;
 }
 
+/* Tier-based styling */
+.tribe[data-tier="free"] {
+  border-color: #a3d5ff;
+  box-shadow: 0 0 15px #a3d5ff;
+}
+
+.tribe[data-tier="sub"] {
+  border-color: #ffb3d9;
+  box-shadow: 0 0 15px #ffb3d9;
+}
+
+.tribe[data-tier="premium"] {
+  border-color: #ffd966;
+  box-shadow: 0 0 15px #ffd966;
+}
+
+/* Mutation trigger styling */
+.mutation-trigger {
+  cursor: pointer;
+  color: var(--accent);
+  text-decoration: underline;
+  font-size: 0.9em;
+  margin-top: 0.5rem;
+  display: inline-block;
+}
+
 /* Responsive tweaks */
 @media (max-width: 600px) {
   .tribe {
