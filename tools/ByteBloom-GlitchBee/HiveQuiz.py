@@ -16,7 +16,7 @@ for q in questions:
     for i, opt in enumerate(q["options"]):
         print(f"{i+1}. {opt['text']}")
     choice = int(input("Choose: ")) - 1
-    for k in opt["tags"]:
+    for k in q["options"][choice]["tags"]:
         score[k] += 1
     print()
 
