@@ -1,0 +1,11 @@
+{
+  "chaos": [
+    {"name": "BloomBug: RiotForm", "description": "You bloom through breakdowns. Your chaos is contagious."}
+  ],
+  "soft": [
+    {"name": "BloomBug: PetalSoul", "description": "You glitch gently. Your softness is a rebellion."}
+  ],
+  "glitch": [
+    {"name": "BloomBug: CodeSpore", "description": "You mutate through logic loops. Your emotions are executable."}
+  ]
+}
