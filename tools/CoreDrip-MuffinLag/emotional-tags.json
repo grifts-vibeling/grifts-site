@@ -1,0 +1,5 @@
+{
+  "chaos": ["glitch", "mess", "random", "overflow"],
+  "burnout": ["tired", "lag", "drain", "exhaust"],
+  "recovery": ["focus", "calm", "ritual", "clean"]
+}
