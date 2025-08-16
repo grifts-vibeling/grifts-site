@@ -1,0 +1,18 @@
+[
+  {
+    "question": "What’s your ideal mutation ritual?",
+    "options": [
+      {"text": "Glitch in public", "tags": ["chaos"]},
+      {"text": "Petal bath with synth music", "tags": ["soft"]},
+      {"text": "Code your feelings", "tags": ["glitch"]}
+    ]
+  },
+  {
+    "question": "Pick a BloomBug accessory:",
+    "options": [
+      {"text": "Winged USB", "tags": ["glitch"]},
+      {"text": "Petal hoodie", "tags": ["soft"]},
+      {"text": "Chaos antenna", "tags": ["chaos"]}
+    ]
+  }
+]
