@@ -2,6 +2,10 @@
   --accent: #ff00aa;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   font-family: 'Helvetica', sans-serif;
   background-color: #0f0f0f;
@@ -39,6 +43,12 @@ h1 {
   padding-top: 20px;
 }
 
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+}
+
 .tribe {
   background: #1a1a1a;
   border: 1px solid #333;
@@ -69,6 +79,13 @@ h1 {
   box-shadow: 0 0 15px var(--accent);
 }
 
+.tribe p:first-of-type {
+  font-weight: bold;
+  font-size: 1.1em;
+  color: var(--accent);
+  margin-bottom: 0.3rem;
+}
+
 .lore {
   font-size: 0.9em;
   color: #ccc;
@@ -91,6 +108,11 @@ h1 {
 .cta:hover {
   box-shadow: 0 0 20px var(--accent);
   transform: scale(1.05);
+}
+
+.cta:active {
+  transform: scale(0.98);
+  box-shadow: 0 0 25px var(--accent);
 }
 
 footer {
