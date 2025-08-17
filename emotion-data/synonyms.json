@@ -1,0 +1,12 @@
+{
+  "joy": ["happy", "cheerful", "elated", "joyful"],
+  "sadness": ["sad", "down", "blue", "gloomy"],
+  "anger": ["angry", "mad", "furious", "irritated"],
+  "calm": ["peaceful", "relaxed", "chill", "serene"],
+  "confusion": ["confused", "lost", "unsure", "puzzled"],
+  "hope": ["hopeful", "optimistic", "bright", "uplifted"],
+  "fear": ["scared", "afraid", "nervous", "anxious"],
+  "love": ["loving", "affectionate", "caring", "warm"],
+  "loneliness": ["alone", "isolated", "lonely", "abandoned"],
+  "excitement": ["excited", "thrilled", "buzzing", "energetic"]
+}
