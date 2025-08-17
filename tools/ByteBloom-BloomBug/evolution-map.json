@@ -1,0 +1,12 @@
+{
+  "joy": ["SparkleBug", "GlowMuffin"],
+  "sadness": ["DripLoom", "EchoNova"],
+  "anger": ["GlitchBee", "LagSpike"],
+  "calm": ["PetalByte", "Cloudie"],
+  "confusion": ["MuffinLag", "ByteBloom"],
+  "hope": ["DreamPatch", "WishWeaver"],
+  "fear": ["ShadowBud", "TrembleTwig"],
+  "love": ["HeartBloom", "SnuggleBug"],
+  "loneliness": ["SoloSprout", "EchoBud"],
+  "excitement": ["BuzzBloom", "ZingBug"]
+}
