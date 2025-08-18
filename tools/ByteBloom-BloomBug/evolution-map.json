@@ -1,15 +1,22 @@
 {
-  "single": {
-    "joy": ["BloomBuzz"],
-    "sadness": ["BloomDrip"],
-    "anger": ["BloomSpike"],
-    "calm": ["BloomFloat"],
-    "confusion": ["BloomTwist"]
-  },
-  "combo": {
-    "joy+anger": "BloomBlitz",
-    "sadness+confusion": "BloomFade",
-    "joy+calm": "BloomGlow",
-    "anger+confusion": "BloomCrash"
-  }
+  "joy": ["BloomBuzz"],
+  "sadness": ["BloomDrip"],
+  "anger": ["BloomSpike"],
+  "calm": ["BloomFloat"],
+  "confusion": ["BloomTwist"],
+  "fear": ["BloomQuiver"],
+  "love": ["BloomGlow"],
+  "curiosity": ["BloomPeek"],
+  "pride": ["BloomRise"],
+  "shame": ["BloomSink"],
+  "joy+anger": ["BloomBlitz"],
+  "sadness+confusion": ["BloomFade"],
+  "joy+calm": ["BloomPeace"],
+  "anger+confusion": ["BloomCrash"],
+  "fear+confusion": ["BloomFlicker"],
+  "love+pride": ["BloomShine"],
+  "sadness+shame": ["BloomMelt"],
+  "curiosity+joy": ["BloomPop"],
+  "anger+pride": ["BloomRoar"],
+  "calm+curiosity": ["BloomDrift"]
 }
