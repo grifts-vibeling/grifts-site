@@ -1,15 +1,15 @@
 {
   "single": {
-    "joy": ["SparkleBug", "GlowMuffin"],
-    "sadness": ["DripLoom", "EchoNova"],
-    "anger": ["GlitchBee", "LagSpike"],
-    "calm": ["PetalByte", "Cloudie"],
-    "confusion": ["MuffinLag", "ByteBloom"]
+    "joy": ["BloomBuzz"],
+    "sadness": ["BloomDrip"],
+    "anger": ["BloomSpike"],
+    "calm": ["BloomFloat"],
+    "confusion": ["BloomTwist"]
   },
   "combo": {
-    "joy+anger": "BuzzSpike",
-    "sadness+confusion": "EchoLoop",
-    "joy+calm": "GlowPetal",
-    "anger+confusion": "CrashBloom"
+    "joy+anger": "BloomBlitz",
+    "sadness+confusion": "BloomFade",
+    "joy+calm": "BloomGlow",
+    "anger+confusion": "BloomCrash"
   }
 }
