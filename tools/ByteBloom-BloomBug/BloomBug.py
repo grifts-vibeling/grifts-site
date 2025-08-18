@@ -25,11 +25,4 @@ def evolve_character(user_input):
 
 if __name__ == "__main__":
     user_input = input("Enter your emotional state: ")
-    evolve_character(user_input)        print(f"🖼️ Image path: {image_path}")
-    else:
-        print(f"\n⚠️ Evolution image not found: {image_path}")
-    return evolution
-
-if __name__ == "__main__":
-    user_input = input("Enter your emotional prompt: ")
     evolve_character(user_input)
