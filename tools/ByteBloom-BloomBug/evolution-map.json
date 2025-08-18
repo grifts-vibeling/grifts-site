@@ -1,12 +1,15 @@
 {
-  "joy": ["SparkleBug", "GlowMuffin"],
-  "sadness": ["DripLoom", "EchoNova"],
-  "anger": ["GlitchBee", "LagSpike"],
-  "calm": ["PetalByte", "Cloudie"],
-  "confusion": ["MuffinLag", "ByteBloom"],
-  "hope": ["DreamPatch", "WishWeaver"],
-  "fear": ["ShadowBud", "TrembleTwig"],
-  "love": ["HeartBloom", "SnuggleBug"],
-  "loneliness": ["SoloSprout", "EchoBud"],
-  "excitement": ["BuzzBloom", "ZingBug"]
+  "single": {
+    "joy": ["SparkleBug", "GlowMuffin"],
+    "sadness": ["DripLoom", "EchoNova"],
+    "anger": ["GlitchBee", "LagSpike"],
+    "calm": ["PetalByte", "Cloudie"],
+    "confusion": ["MuffinLag", "ByteBloom"]
+  },
+  "combo": {
+    "joy+anger": "BuzzSpike",
+    "sadness+confusion": "EchoLoop",
+    "joy+calm": "GlowPetal",
+    "anger+confusion": "CrashBloom"
+  }
 }
