@@ -1,11 +1,11 @@
 {
-  "joy": ["happy", "cheerful", "elated", "joyful", "excited"],
+  "love": ["loving", "affectionate", "caring", "warm", "devoted"],
   "sadness": ["sad", "down", "blue", "gloomy", "depressed"],
   "anger": ["angry", "mad", "furious", "irritated", "raging"],
   "calm": ["peaceful", "relaxed", "chill", "serene", "still"],
   "confusion": ["confused", "lost", "unsure", "puzzled", "foggy"],
   "fear": ["scared", "afraid", "nervous", "anxious", "terrified"],
-  "love": ["loving", "affectionate", "caring", "warm", "devoted"],
+  "joy": ["happy", "cheerful", "elated", "joyful", "excited"],
   "curiosity": ["curious", "inquisitive", "interested", "exploring"],
   "pride": ["proud", "confident", "strong", "bold", "accomplished"],
   "shame": ["ashamed", "embarrassed", "guilty", "low", "worthless"]
