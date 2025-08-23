@@ -1,12 +1,78 @@
 {
-  "love": ["loving", "affectionate", "caring", "warm", "devoted"],
-  "sadness": ["sad", "down", "blue", "gloomy", "depressed"],
-  "anger": ["angry", "mad", "furious", "irritated", "raging"],
-  "calm": ["peaceful", "relaxed", "chill", "serene", "still"],
-  "confusion": ["confused", "lost", "unsure", "puzzled", "foggy"],
-  "fear": ["scared", "afraid", "nervous", "anxious", "terrified"],
-  "joy": ["happy", "cheerful", "elated", "joyful", "excited"],
-  "curiosity": ["curious", "inquisitive", "interested", "exploring"],
-  "pride": ["proud", "confident", "strong", "bold", "accomplished"],
-  "shame": ["ashamed", "embarrassed", "guilty", "low", "worthless"]
+  "map": {
+    "love": "SoftByte",
+    "sadness": "DreamPatch",
+    "anger": "CoreGrift",
+    "calm": "SoftByte",
+    "confusion": "NeonDig",
+    "fear": "CoreGrift",
+    "joy": "ByteBloom",
+    "curiosity": "NeonDig",
+    "pride": "ByteBloom",
+    "shame": "DreamPatch"
+  },
+  "synonyms": {
+    "love": ["loving", "affectionate", "caring", "warm", "devoted"],
+    "sadness": ["sad", "down", "blue", "gloomy", "depressed"],
+    "anger": ["angry", "mad", "furious", "irritated", "raging"],
+    "calm": ["peaceful", "relaxed", "chill", "serene", "still"],
+    "confusion": ["confused", "lost", "unsure", "puzzled", "foggy"],
+    "fear": ["scared", "afraid", "nervous", "anxious", "terrified"],
+    "joy": ["happy", "cheerful", "elated", "joyful", "excited"],
+    "curiosity": ["curious", "inquisitive", "interested", "exploring"],
+    "pride": ["proud", "confident", "strong", "bold", "accomplished"],
+    "shame": ["ashamed", "embarrassed", "guilty", "low", "worthless"]
+  },
+  "bloombugs": {
+    "love": {
+      "name": "Heartloom",
+      "image": "heartloom.png",
+      "lore": "Weaves bonds between kindred spirits, stitching warmth into the grid."
+    },
+    "sadness": {
+      "name": "Mournpetal",
+      "image": "mournpetal.png",
+      "lore": "A fragile bloom that drinks from tears, carrying quiet resilience."
+    },
+    "anger": {
+      "name": "Blazethorn",
+      "image": "blazethorn.png",
+      "lore": "Spikes with righteous heat, burning paths through stagnant code."
+    },
+    "calm": {
+      "name": "Glowfern",
+      "image": "glowfern.png",
+      "lore": "Unfurls in still air, radiating a soft light that steadies the pulse."
+    },
+    "confusion": {
+      "name": "Mazeleaf",
+      "image": "mazeleaf.png",
+      "lore": "Shifts shape with every glance, a living riddle in the mutation garden."
+    },
+    "fear": {
+      "name": "Shiverstem",
+      "image": "shiverstem.png",
+      "lore": "Quivers in shadow, yet grows toward the faintest glimmer of safety."
+    },
+    "joy": {
+      "name": "Sunburst",
+      "image": "sunburst.png",
+      "lore": "Explodes in color, scattering seeds of laughter across the grid."
+    },
+    "curiosity": {
+      "name": "Questvine",
+      "image": "questvine.png",
+      "lore": "Climbs toward the unknown, wrapping around mysteries with eager tendrils."
+    },
+    "pride": {
+      "name": "Crestbloom",
+      "image": "crestbloom.png",
+      "lore": "Stands tall in the mutation field, petals edged with quiet triumph."
+    },
+    "shame": {
+      "name": "Veilbud",
+      "image": "veilbud.png",
+      "lore": "Hides its colors until trust coaxes it into the light."
+    }
+  }
 }
