@@ -65,6 +65,7 @@ h1 {
   padding: 30px;
 }
 
+/* Legacy grid (kept for compatibility if used elsewhere) */
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -79,6 +80,7 @@ h1 {
   }
 }
 
+/* Legacy tribe card (used in Stage 2) */
 .tribe {
   background: #1a1a1a;
   border: 1px solid #333;
@@ -190,4 +192,115 @@ footer {
   #intro {
     font-size: 1em;
   }
+}
+
+
+/* ===== Stage 3 Tribe/Vibeling Layout ===== */
+.tribe-group {
+  margin: 4rem 0;
+  padding: 0 1rem;
+}
+
+.tribe-title {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  color: var(--accent);
+}
+
+.emotion-code {
+  font-size: 0.9em;
+  color: #ccc;
+}
+
+/* Grid for vibelings within each tribe */
+.vibeling-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Vibeling card — mirrors legacy .tribe styling */
+.vibeling {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 1rem;
+  text-align: center;
+  color: #f0f0f0;
+  box-shadow: 0 0 12px rgba(255, 0, 255, 0.2);
+  transition: transform 0.3s ease;
+  flex: 1 1 240px;
+  max-width: 320px;
+}
+
+.vibeling:hover {
+  transform: scale(1.05);
+}
+
+.vibeling img {
+  width: 100%;
+  max-width: 120px; /* match legacy image size */
+  height: auto;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+  box-shadow: 0 0 10px #444;
+  transition: all 0.3s ease;
+}
+
+.vibeling:hover img {
+  transform: scale(1.05);
+  box-shadow: 0 0 15px var(--accent);
+}
+
+.vibeling h3 {
+  margin: 0.25rem 0 0.25rem;
+  color: var(--accent);
+  font-size: 1.1em;
+}
+
+/* Tier-based styling for vibelings (parity with legacy .tribe tiers) */
+.vibeling[data-tier="free"] {
+  border-color: #a3d5ff;
+  box-shadow: 0 0 15px #a3d5ff;
+}
+
+.vibeling[data-tier="sub"] {
+  border-color: #ffb3d9;
+  box-shadow: 0 0 15px #ffb3d9;
+}
+
+.vibeling[data-tier="premium"] {
+  border-color: #ffd966;
+  box-shadow: 0 0 15px #ffd966;
+}
+
+/* Mobile stack for vibelings */
+@media (max-width: 600px) {
+  .vibeling-grid {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .vibeling {
+    max-width: 380px;
+    width: 100%;
+  }
+}
+
+/* Optional: spacing for the overall #tribes heading above groups */
+#tribes > h2 {
+  margin-bottom: 0.5rem;
+  color: #fff;
+  opacity: 0.9;
+}
+
+/* Optional: subtle separation between tribe groups */
+.tribe-group + .tribe-group {
+  border-top: 1px dashed #2a2a2a;
+  padding-top: 3rem;
+  margin-top: 3rem;
 }
