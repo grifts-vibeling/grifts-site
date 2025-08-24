@@ -48,11 +48,9 @@ document.getElementById('mutation-form').addEventListener('submit', function(e) 
       for (const [emotion, info] of Object.entries(data)) {
         const synMatched = info.synonyms.some(syn => {
           const synWords = normalise(syn).split(' ');
-          // Every word in synonym must appear in input (order‑agnostic, fuzzy)
           const allWordsPresent = synWords.every(synWord =>
             inputWords.some(inputWord => fuzzyWordMatch(inputWord, synWord))
           );
-          // Negator check (per‑emotion list if provided, else global)
           const negators = info.negators || [];
           const hasNegator = inputWords.some(w => negators.includes(w));
           return allWordsPresent && !hasNegator;
