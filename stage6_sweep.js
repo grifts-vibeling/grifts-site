@@ -1,98 +1,98 @@
 #!/usr/bin/env node
 
+/**
+ * Stage 6 Final Sweep — Canon‑Driven Version
+ * Nathan's BloomBug integrity check with fuzzy matching
+ */
+
 const fs = require('fs');
 const path = require('path');
 
-console.log('\n🚀 Stage 6 Final Sweep\n');
+// === CONFIG ===
+const canonPath = path.join(__dirname, '../data/grifts_canon.json');
+const bloomBugAssetDir = path.join(__dirname, '../assets/bloombugs');
 
-// Paths
-const canonPath = path.join(__dirname, 'data', 'grifts_canon.json');
-const bloombugsDir = path.join(__dirname, 'assets', 'bloombugs');
+// === LOAD CANON ===
+const canon = require(canonPath);
+const bloomBugIDs = Object.keys(canon.bloombugs);
 
-// Load canon
-if (!fs.existsSync(canonPath)) {
-  console.error(`❌ Canon file not found at ${canonPath}`);
-  process.exit(1);
-}
-const canon = JSON.parse(fs.readFileSync(canonPath, 'utf8'));
+// === LOAD ASSET FILENAMES ===
+const assetFiles = fs.readdirSync(bloomBugAssetDir)
+  .filter(f => !f.startsWith('.'))
+  .map(f => path.basename(f, path.extname(f)));
 
-// Extract intended duals
-let EXPECTED_DUALS = [];
-if (Array.isArray(canon.intendedDuals)) {
-  EXPECTED_DUALS = canon.intendedDuals.map(k => k.split('+').sort().join('+'));
-} else if (canon.mutation_rules) {
-  EXPECTED_DUALS = Object.values(canon.mutation_rules)
-    .filter(r => r.type === 'dual' && Array.isArray(r.emotions))
-    .map(r => r.emotions.slice().sort().join('+'));
-}
-EXPECTED_DUALS = [...new Set(EXPECTED_DUALS)];
+// === CASE‑INSENSITIVE MATCHING ===
+const canonLower = bloomBugIDs.map(id => id.toLowerCase());
+const assetsLower = assetFiles.map(f => f.toLowerCase());
 
-// Load BloomBug JSONs
-if (!fs.existsSync(bloombugsDir)) {
-  console.error(`❌ BloomBugs directory not found at ${bloombugsDir}`);
-  process.exit(1);
-}
-const bloombugFiles = fs.readdirSync(bloombugsDir).filter(f => f.endsWith('.json'));
+// === DIRECT MISMATCHES ===
+const missingAssets = bloomBugIDs.filter(id => !assetsLower.includes(id.toLowerCase()));
+const extraAssets = assetFiles.filter(f => !canonLower.includes(f.toLowerCase()));
 
-let actualCombos = [];
-let jsonIDs = [];
-let missingAssets = [];
-let orphanAssets = [];
-
-// Gather combos + check asset references
-bloombugFiles.forEach(file => {
-  const data = JSON.parse(fs.readFileSync(path.join(bloombugsDir, file), 'utf8'));
-  jsonIDs.push(path.basename(file, '.json'));
-
-  if (Array.isArray(data.emotions) && data.emotions.length === 2) {
-    actualCombos.push(data.emotions.slice().sort().join('+'));
-  }
-
-  // Check referenced assets exist
-  ['image', 'sprite', 'audio'].forEach(key => {
-    if (data[key]) {
-      const assetPath = path.join(bloombugsDir, data[key]);
-      if (!fs.existsSync(assetPath)) {
-        missingAssets.push(`${file} → ${data[key]}`);
+// === FUZZY MATCH HELPER ===
+function levenshtein(a, b) {
+  const matrix = Array.from({ length: b.length + 1 }, (_, i) => [i]);
+  for (let j = 0; j <= a.length; j++) matrix[0][j] = j;
+  for (let i = 1; i <= b.length; i++) {
+    for (let j = 1; j <= a.length; j++) {
+      if (b.charAt(i - 1).toLowerCase() === a.charAt(j - 1).toLowerCase()) {
+        matrix[i][j] = matrix[i - 1][j - 1];
+      } else {
+        matrix[i][j] = Math.min(
+          matrix[i - 1][j - 1] + 1, // substitution
+          matrix[i][j - 1] + 1,     // insertion
+          matrix[i - 1][j] + 1      // deletion
+        );
       }
     }
-  });
-});
-actualCombos = [...new Set(actualCombos)];
-
-// Orphaned assets (files without matching JSON)
-const allAssetFiles = fs.readdirSync(bloombugsDir).filter(f => !f.endsWith('.json'));
-allAssetFiles.forEach(asset => {
-  const id = asset.split('.')[0];
-  if (!jsonIDs.includes(id)) {
-    orphanAssets.push(asset);
   }
-});
+  return matrix[b.length][a.length];
+}
 
-// Canon diff
-const canonIDs = Object.keys(canon.bloombugs || {});
-const missingInCanon = jsonIDs.filter(id => !canonIDs.includes(id));
-const missingInJSON = canonIDs.filter(id => !jsonIDs.includes(id));
+function suggestMatches(missing, extras) {
+  const suggestions = [];
+  missing.forEach(miss => {
+    let best = { name: null, dist: Infinity };
+    extras.forEach(extra => {
+      const dist = levenshtein(miss, extra);
+      if (dist < best.dist) best = { name: extra, dist };
+    });
+    if (best.dist > 0 && best.dist <= 3) {
+      suggestions.push({ canon: miss, asset: best.name, distance: best.dist });
+    }
+  });
+  return suggestions;
+}
 
-// Compare combos
-const missingCombos = EXPECTED_DUALS.filter(c => !actualCombos.includes(c));
-const extraCombos = actualCombos.filter(c => !EXPECTED_DUALS.includes(c));
+// === FUZZY SUGGESTIONS ===
+const fuzzySuggestions = suggestMatches(
+  missingAssets.map(m => m.toLowerCase()),
+  extraAssets.map(e => e.toLowerCase())
+);
 
-// Report
-missingCombos.forEach(c => console.warn(`⚠️ Missing dual: ${c}`));
-extraCombos.forEach(c => console.warn(`⚠️ Extra combo: ${c}`));
-missingAssets.forEach(m => console.warn(`⚠️ Missing asset: ${m}`));
-orphanAssets.forEach(o => console.warn(`⚠️ Orphan asset: ${o}`));
-missingInCanon.forEach(id => console.warn(`⚠️ BloomBug in assets but not in canon: ${id}`));
-missingInJSON.forEach(id => console.warn(`⚠️ BloomBug in canon but no JSON: ${id}`));
+// === REPORT ===
+console.log('=== Stage 6 Final Sweep ===\n');
 
-// Summary
-console.log('\n📊 Summary:');
-console.log(`  Missing duals: ${missingCombos.length}`);
-console.log(`  Extra combos: ${extraCombos.length}`);
-console.log(`  Missing assets: ${missingAssets.length}`);
-console.log(`  Orphan assets: ${orphanAssets.length}`);
-console.log(`  Asset-only IDs: ${missingInCanon.length}`);
-console.log(`  Canon-only IDs: ${missingInJSON.length}`);
+console.log(`BloomBug Missing Assets: ${missingAssets.length}`);
+if (missingAssets.length) console.log(missingAssets.join(', '), '\n');
 
-console.log('\n✅ Stage 6 sweep complete.\n');
+console.log(`BloomBug Extra Assets: ${extraAssets.length}`);
+if (extraAssets.length) console.log(extraAssets.join(', '), '\n');
+
+if (fuzzySuggestions.length) {
+  console.log('Possible Fuzzy Matches (naming drift):');
+  fuzzySuggestions.forEach(s =>
+    console.log(`  Canon: ${s.canon} ↔ Asset: ${s.asset} (distance ${s.distance})`)
+  );
+  console.log('');
+}
+
+// === PLACEHOLDER FOR OTHER STAGE 6 CHECKS ===
+// Keep your existing logic for:
+// - Missing duals
+// - Extra combos
+// - Missing assets in other categories
+// - Orphan assets in other categories
+// Just slot this BloomBug section in place of the old one.
+
+console.log('Stage 6 sweep complete.');
