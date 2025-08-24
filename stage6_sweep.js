@@ -1,8 +1,10 @@
 #!/usr/bin/env node
 
 /**
- * Stage 6 Final Sweep — Canon‑Driven Version
- * Nathan's BloomBug integrity check with fuzzy matching
+ * Stage 6 Final Sweep — Fully Canon‑Driven
+ * Unified integrity check for all asset categories, duals, and combos
+ * with fuzzy matching for naming drift.
+ * Author: Nathan + Copilot
  */
 
 const fs = require('fs');
@@ -10,24 +12,10 @@ const path = require('path');
 
 // === CONFIG ===
 const canonPath = path.join(__dirname, '../data/grifts_canon.json');
-const bloomBugAssetDir = path.join(__dirname, '../assets/bloombugs');
+const assetBaseDir = path.join(__dirname, '../assets');
 
 // === LOAD CANON ===
 const canon = require(canonPath);
-const bloomBugIDs = Object.keys(canon.bloombugs);
-
-// === LOAD ASSET FILENAMES ===
-const assetFiles = fs.readdirSync(bloomBugAssetDir)
-  .filter(f => !f.startsWith('.'))
-  .map(f => path.basename(f, path.extname(f)));
-
-// === CASE‑INSENSITIVE MATCHING ===
-const canonLower = bloomBugIDs.map(id => id.toLowerCase());
-const assetsLower = assetFiles.map(f => f.toLowerCase());
-
-// === DIRECT MISMATCHES ===
-const missingAssets = bloomBugIDs.filter(id => !assetsLower.includes(id.toLowerCase()));
-const extraAssets = assetFiles.filter(f => !canonLower.includes(f.toLowerCase()));
 
 // === FUZZY MATCH HELPER ===
 function levenshtein(a, b) {
@@ -64,35 +52,110 @@ function suggestMatches(missing, extras) {
   return suggestions;
 }
 
-// === FUZZY SUGGESTIONS ===
-const fuzzySuggestions = suggestMatches(
-  missingAssets.map(m => m.toLowerCase()),
-  extraAssets.map(e => e.toLowerCase())
-);
+// === GENERIC CATEGORY CHECK ===
+function checkCategory(categoryName, assetFolder) {
+  console.log(`\n=== ${categoryName.toUpperCase()} CHECK ===`);
 
-// === REPORT ===
-console.log('=== Stage 6 Final Sweep ===\n');
+  const canonIDs = Object.keys(canon[categoryName] || {});
+  const canonLower = canonIDs.map(id => id.toLowerCase());
 
-console.log(`BloomBug Missing Assets: ${missingAssets.length}`);
-if (missingAssets.length) console.log(missingAssets.join(', '), '\n');
+  const dirPath = path.join(assetBaseDir, assetFolder);
+  const assetFiles = fs.existsSync(dirPath)
+    ? fs.readdirSync(dirPath)
+        .filter(f => !f.startsWith('.'))
+        .map(f => path.basename(f, path.extname(f)))
+    : [];
+  const assetsLower = assetFiles.map(f => f.toLowerCase());
 
-console.log(`BloomBug Extra Assets: ${extraAssets.length}`);
-if (extraAssets.length) console.log(extraAssets.join(', '), '\n');
+  const missingAssets = canonIDs.filter(id => !assetsLower.includes(id.toLowerCase()));
+  const extraAssets = assetFiles.filter(f => !canonLower.includes(f.toLowerCase()));
 
-if (fuzzySuggestions.length) {
-  console.log('Possible Fuzzy Matches (naming drift):');
-  fuzzySuggestions.forEach(s =>
-    console.log(`  Canon: ${s.canon} ↔ Asset: ${s.asset} (distance ${s.distance})`)
+  console.log(`Missing Assets: ${missingAssets.length}`);
+  if (missingAssets.length) console.log(missingAssets.join(', '));
+
+  console.log(`Extra Assets: ${extraAssets.length}`);
+  if (extraAssets.length) console.log(extraAssets.join(', '));
+
+  const fuzzySuggestions = suggestMatches(
+    missingAssets.map(m => m.toLowerCase()),
+    extraAssets.map(e => e.toLowerCase())
   );
-  console.log('');
+  if (fuzzySuggestions.length) {
+    console.log('Possible Fuzzy Matches:');
+    fuzzySuggestions.forEach(s =>
+      console.log(`  Canon: ${s.canon} ↔ Asset: ${s.asset} (distance ${s.distance})`)
+    );
+  }
 }
 
-// === PLACEHOLDER FOR OTHER STAGE 6 CHECKS ===
-// Keep your existing logic for:
-// - Missing duals
-// - Extra combos
-// - Missing assets in other categories
-// - Orphan assets in other categories
-// Just slot this BloomBug section in place of the old one.
+// === DUALS CHECK ===
+function checkDuals() {
+  console.log(`\n=== DUALS CHECK ===`);
+  let missingDuals = [];
+  Object.entries(canon).forEach(([category, items]) => {
+    Object.entries(items).forEach(([id, data]) => {
+      if (data.dual && !canon[category][data.dual]) {
+        missingDuals.push(`${id} → ${data.dual}`);
+      }
+    });
+  });
+  console.log(`Missing duals: ${missingDuals.length}`);
+  if (missingDuals.length) console.log(missingDuals.join(', '));
+}
 
-console.log('Stage 6 sweep complete.');
+// === COMBOS CHECK ===
+function checkCombos() {
+  console.log(`\n=== COMBOS CHECK ===`);
+  let missingCombos = [];
+  let extraCombos = [];
+
+  Object.entries(canon).forEach(([category, items]) => {
+    Object.entries(items).forEach(([id, data]) => {
+      if (data.combos) {
+        data.combos.forEach(combo => {
+          if (!canon[category][combo]) {
+            missingCombos.push(`${id} → ${combo}`);
+          }
+        });
+      }
+    });
+  });
+
+  // Optional: detect combos that exist but aren't referenced anywhere
+  const allIDs = Object.values(canon).flatMap(obj => Object.keys(obj));
+  const referencedCombos = new Set(
+    Object.values(canon).flatMap(items =>
+      Object.values(items).flatMap(data => data.combos || [])
+    )
+  );
+  allIDs.forEach(id => {
+    if (!referencedCombos.has(id)) {
+      extraCombos.push(id);
+    }
+  });
+
+  console.log(`Missing combos: ${missingCombos.length}`);
+  if (missingCombos.length) console.log(missingCombos.join(', '));
+
+  console.log(`Extra combos: ${extraCombos.length}`);
+  if (extraCombos.length) console.log(extraCombos.join(', '));
+}
+
+// === RUN ALL CHECKS ===
+console.log('=== Stage 6 Final Sweep (Fully Canon‑Driven) ===');
+
+const categoryMap = {
+  bloombugs: 'bloombugs',
+  rituals: 'rituals',
+  relics: 'relics',
+  // Add more categories here
+};
+
+Object.entries(categoryMap).forEach(([canonKey, folderName]) => {
+  checkCategory(canonKey, folderName);
+});
+
+checkDuals();
+checkCombos();
+
+console.log('\nStage 6 sweep complete.');
