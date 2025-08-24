@@ -3,7 +3,7 @@
 /**
  * BloomBug Audit Script
  * ---------------------
- * Dynamically loads intended dual emotion combos from grifts_canon.json
+ * Dynamically loads intended dual emotion combos from data/grifts_canon.json
  * and compares them to the actual combos in BloomBug entries.
  *
  * Flags:
@@ -17,7 +17,7 @@ const path = require('path');
 console.log('\n🔍 Auditing BloomBug entries...\n');
 
 // --- 1. Load canon ---
-const canonPath = path.join(__dirname, 'grifts_canon.json');
+const canonPath = path.join(__dirname, 'data', 'grifts_canon.json');
 if (!fs.existsSync(canonPath)) {
   console.error(`❌ Canon file not found at ${canonPath}`);
   process.exit(1);
