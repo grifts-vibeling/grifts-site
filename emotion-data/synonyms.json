@@ -1,24 +1,183 @@
 {
-  "anger": { "tribe": "CoreDrip", "synonyms": ["rage","fury","irritation","wrath","resentment","annoyance","frustration","outrage","hostility","aggravation","mad","pissed off","seeing red","boiling over","worked up","temper","cross","grumpy","snappy","irate"], "negators": ["calm","peaceful","relaxed","content","serene","chill"] },
-  "burnout": { "tribe": "CoreDrip", "synonyms": ["exhaustion","fatigue","overwork","drained","worn out","spent","burned out","running on empty","mentally drained","physically drained","overextended","stretched thin","tired all the time","no energy","fatigued"], "negators": ["energized","rested","refreshed","recharged"] },
-  "digital overload": { "tribe": "CoreDrip", "synonyms": ["screen fatigue","tech overwhelm","information overload","too much screen time","digital fatigue","scroll burnout","online exhaustion","device fatigue","social media burnout","zoom fatigue","constant notifications","tech burnout"], "negators": ["offline","unplugged","disconnected","tech-free"] },
-  "healing": { "tribe": "SoftByte", "synonyms": ["recovery","restoration","mending","getting better","on the mend","regeneration","rehabilitation","recuperation","self-healing","healing process","emotional healing","physical healing","restoring balance","repairing"], "negators": ["worsening","deteriorating","declining","relapsing"] },
-  "softness": { "tribe": "SoftByte", "synonyms": ["gentleness","tenderness","kindness","delicacy","warmth","compassion","soft-heartedness","caring","gentle touch","mildness","leniency","forgiveness"], "negators": ["harshness","cruelty","toughness","severity"] },
-  "emotional reset": { "tribe": "SoftByte", "synonyms": ["fresh start","emotional cleanse","starting over","mental reset","clear the mind","wiping the slate clean","reboot","emotional refresh","new beginning","reset button"], "negators": ["stuck","trapped","unchanged","static"] },
-  "identity flex": { "tribe": "NeonDrip", "synonyms": ["self-expression","persona shift","reinventing myself","changing my image","alter ego","personal rebrand","style change","identity shift","trying a new look","expressing myself","character change"], "negators": ["same old","unchanged","rigid","fixed"] },
-  "transformation": { "tribe": "NeonDrip", "synonyms": ["metamorphosis","change","evolution","transition","shift","conversion","turnaround","rebirth","renewal","complete change","life change","overhaul"], "negators": ["stagnation","unchanged","static","fixed"] },
-  "escapism": { "tribe": "DreamPatch", "synonyms": ["avoidance","fantasy","daydreaming","running away","checking out","mental getaway","imagination","make-believe","living in my head","avoiding reality","zoning out"], "negators": ["facing reality","confronting","present","grounded"] },
-  "dream logic": { "tribe": "DreamPatch", "synonyms": ["surreal thinking","illogical dreaming","nonsense logic","fantastical ideas","dreamlike","absurd reasoning","impossible logic","strange visions","weird dreams"], "negators": ["logical","rational","realistic","sensible"] },
-  "growth": { "tribe": "ByteBloom", "synonyms": ["expansion","flourish","progress","development","advancement","self-improvement","personal growth","leveling up","evolving","maturing","blossoming","thriving"], "negators": ["stagnation","decline","regression","shrinking"] },
-  "chaos": { "tribe": "ByteBloom", "synonyms": ["disorder","anarchy","turmoil","confusion","havoc","mayhem","pandemonium","mess","uproar","wildness","unrest","lawlessness"], "negators": ["order","calm","stability","control"] },
-  "optimism": { "tribe": "ByteBloom", "synonyms": ["hopefulness","positive outlook","bright side","glass half full","looking up","sunny disposition","cheerfulness","hope","confidence in the future","good vibes"], "negators": ["bad","negative","pessimistic","hopeless","gloomy"] },
-  "love": { "tribe": "ByteBloom", "synonyms": ["affection","fondness","devotion","adoration","caring","compassion","romance","passion","attachment","endearment","infatuation","tenderness","warmth of heart"], "negators": ["hate","dislike","detest","loathe","resent"] },
-  "sadness": { "tribe": "ByteBloom", "synonyms": ["sorrow","unhappiness","melancholy","grief","heartache","misery","despair","blue mood","downheartedness","gloom","feeling low","tearful"], "negators": ["happy","joyful","cheerful","content"] },
-  "calm": { "tribe": "ByteBloom", "synonyms": ["peace","serenity","tranquility","relaxation","stillness","quiet","composure","inner peace","peace of mind","untroubled","restfulness","ease"], "negators": ["anxious","agitated","restless","uneasy","disturbed"] },
-  "confusion": { "tribe": "ByteBloom", "synonyms": ["bewilderment","uncertainty","perplexity","puzzlement","disorientation","lost","mixed up","unsure","foggy","lack of clarity","muddled"], "negators": ["clear","certain","sure","confident"] },
-  "fear": { "tribe": "ByteBloom", "synonyms": ["terror","anxiety","dread","apprehension","panic","nervousness","worry","unease","foreboding","scared","afraid","fright"], "negators": ["brave","fearless","courageous","confident"] },
-  "joy": { "tribe": "ByteBloom", "synonyms": ["happiness","delight","elation","glee","bliss","cheerfulness","jubilation","thrill","ecstasy","overjoyed","contentment","good mood"], "negators": ["sad","unhappy","miserable","bad","negative","gloomy"] },
-  "curiosity": { "tribe": "ByteBloom", "synonyms": ["inquisitiveness","interest","wonder","exploration","eagerness to know","questioning","fascination","nosiness","thirst for knowledge","inquiring mind"], "negators": ["indifference","disinterest","apathy","uninterested","bored"] },
-  "pride": { "tribe": "ByteBloom", "synonyms": ["self-respect","dignity","honor","confidence","self-esteem","self-worth","sense of achievement","accomplishment","proudness"], "negators": ["shame","humility","modesty","self-doubt","embarrassment"] },
-  "shame": { "tribe": "ByteBloom", "synonyms": ["guilt","embarrassment","humiliation","remorse","disgrace","self-consciousness","regret","mortification","feeling small"], "negators": ["pride","confidence","self-assurance","self-respect"] }
+  "anger": {
+    "tribe": "CoreDrip",
+    "synonyms": [
+      "rage","fury","irritation","wrath","resentment","annoyance","frustration","outrage","hostility","aggravation",
+      "mad","pissed off","seeing red","boiling over","worked up","temper","cross","grumpy","snappy","irate",
+      "angry","furious","livid","mad as hell","ticked off","fed up","hot under the collar","blowing up","losing it","peeved"
+    ],
+    "negators": ["calm","peaceful","relaxed","content","serene","chill"]
+  },
+  "burnout": {
+    "tribe": "CoreDrip",
+    "synonyms": [
+      "exhaustion","fatigue","overwork","drained","worn out","spent","burned out","burnt out","running on empty",
+      "mentally drained","physically drained","overextended","stretched thin","tired all the time","no energy","fatigued",
+      "knackered","dead tired","beat","shattered","dog tired","bone tired","done in","running low","out of steam"
+    ],
+    "negators": ["energized","rested","refreshed","recharged"]
+  },
+  "digital overload": {
+    "tribe": "CoreDrip",
+    "synonyms": [
+      "screen fatigue","tech overwhelm","information overload","too much screen time","digital fatigue","scroll burnout",
+      "online exhaustion","device fatigue","social media burnout","zoom fatigue","constant notifications","tech burnout",
+      "doomscrolling","scroll fatigue","notification overload","always online","screen burnout"
+    ],
+    "negators": ["offline","unplugged","disconnected","tech-free"]
+  },
+  "healing": {
+    "tribe": "SoftByte",
+    "synonyms": [
+      "recovery","restoration","mending","getting better","on the mend","regeneration","rehabilitation","recuperation",
+      "self-healing","healing process","emotional healing","physical healing","restoring balance","repairing",
+      "bouncing back","coming back","getting well","feeling better","picking up","on track again"
+    ],
+    "negators": ["worsening","deteriorating","declining","relapsing"]
+  },
+  "softness": {
+    "tribe": "SoftByte",
+    "synonyms": [
+      "gentleness","tenderness","kindness","delicacy","warmth","compassion","soft-heartedness","caring","gentle touch",
+      "mildness","leniency","forgiveness","soft touch","warm-hearted","kind-hearted","tender-hearted","empathy"
+    ],
+    "negators": ["harshness","cruelty","toughness","severity"]
+  },
+  "emotional reset": {
+    "tribe": "SoftByte",
+    "synonyms": [
+      "fresh start","emotional cleanse","starting over","mental reset","clear the mind","wiping the slate clean","reboot",
+      "emotional refresh","new beginning","reset button","starting fresh","mental refresh","emotional reboot"
+    ],
+    "negators": ["stuck","trapped","unchanged","static"]
+  },
+  "identity flex": {
+    "tribe": "NeonDrip",
+    "synonyms": [
+      "self-expression","persona shift","reinventing myself","changing my image","alter ego","personal rebrand","style change",
+      "identity shift","trying a new look","expressing myself","character change","switching styles","new persona","rebranding myself"
+    ],
+    "negators": ["same old","unchanged","rigid","fixed"]
+  },
+  "transformation": {
+    "tribe": "NeonDrip",
+    "synonyms": [
+      "metamorphosis","change","evolution","transition","shift","conversion","turnaround","rebirth","renewal","complete change",
+      "life change","overhaul","big change","total change","full transformation"
+    ],
+    "negators": ["stagnation","unchanged","static","fixed"]
+  },
+  "escapism": {
+    "tribe": "DreamPatch",
+    "synonyms": [
+      "avoidance","fantasy","daydreaming","running away","checking out","mental getaway","imagination","make-believe",
+      "living in my head","avoiding reality","zoning out","getting lost in thought","spacing out","drifting off","in my own world"
+    ],
+    "negators": ["facing reality","confronting","present","grounded"]
+  },
+  "dream logic": {
+    "tribe": "DreamPatch",
+    "synonyms": [
+      "surreal thinking","illogical dreaming","nonsense logic","fantastical ideas","dreamlike","absurd reasoning","impossible logic",
+      "strange visions","weird dreams","nonsensical","outlandish","fantasy logic"
+    ],
+    "negators": ["logical","rational","realistic","sensible"]
+  },
+  "growth": {
+    "tribe": "ByteBloom",
+    "synonyms": [
+      "expansion","flourish","progress","development","advancement","self-improvement","personal growth","leveling up","evolving",
+      "maturing","blossoming","thriving","moving forward","stepping up","getting better","self-betterment"
+    ],
+    "negators": ["stagnation","decline","regression","shrinking"]
+  },
+  "chaos": {
+    "tribe": "ByteBloom",
+    "synonyms": [
+      "disorder","anarchy","turmoil","confusion","havoc","mayhem","pandemonium","mess","uproar","wildness","unrest","lawlessness",
+      "bedlam","madness","frenzy","tumult"
+    ],
+    "negators": ["order","calm","stability","control"]
+  },
+  "optimism": {
+    "tribe": "ByteBloom",
+    "synonyms": [
+      "hopefulness","positive outlook","bright side","glass half full","looking up","sunny disposition","cheerfulness","hope",
+      "confidence in the future","good vibes","positive thinking","seeing the good","upbeat","rose-tinted"
+    ],
+    "negators": ["bad","negative","pessimistic","hopeless","gloomy"]
+  },
+  "love": {
+    "tribe": "ByteBloom",
+    "synonyms": [
+      "affection","fondness","devotion","adoration","caring","compassion","romance","passion","attachment","endearment",
+      "infatuation","tenderness","warmth of heart","love","in love","crush","sweet on","head over heels"
+    ],
+    "negators": ["hate","dislike","detest","loathe","resent"]
+  },
+  "sadness": {
+    "tribe": "ByteBloom",
+    "synonyms": [
+      "sorrow","unhappiness","melancholy","grief","heartache","misery","despair","blue mood","downheartedness","gloom",
+      "feeling low","tearful","gutted","feeling blue","low spirits","depressed","down in the dumps"
+    ],
+    "negators": ["happy","joyful","cheerful","content"]
+  },
+  "calm": {
+    "tribe": "ByteBloom",
+    "synonyms": [
+      "peace","serenity","tranquility","relaxation","stillness","quiet","composure","inner peace","peace of mind","untroubled",
+      "restfulness","ease","laid back","chilled","zen","at ease"
+    ],
+    "negators": ["anxious","agitated","restless","uneasy","disturbed"]
+  },
+  "confusion": {
+    "tribe": "ByteBloom",
+    "synonyms": [
+      "bewilderment","uncertainty","perplexity","puzzlement","disorientation","lost","mixed up","unsure","foggy","lack of clarity",
+      "muddled","all over the place","head spinning","at sea"
+    ],
+    "negators": ["clear","certain","sure","confident"]
+  },
+  "fear": {
+    "tribe": "ByteBloom",
+    "synonyms": [
+      "terror","anxiety","dread","apprehension","panic","nervousness","worry","unease","foreboding","scared","afraid","fright",
+      "fearful","on edge","spooked","shaken"
+    ],
+    "negators": ["brave","fearless","courageous","confident"]
+  },
+  "joy": {
+    "tribe": "ByteBloom",
+    "synonyms": [
+      "happiness","delight","elation","glee","bliss","cheerfulness","jubilation","thrill","ecstasy","overjoyed",
+      "contentment","good mood","over the moon","buzzing","pumped","stoked","thrilled to bits","walking on air",
+      "grinning ear to ear","smiling from ear to ear","happpy"
+    ],
+    "negators": ["sad","unhappy","miserable","bad","negative","gloomy"]
+  },
+  "curiosity": {
+    "tribe": "ByteBloom",
+    "synonyms": [
+      "inquisitiveness","interest","wonder","exploration","eagerness to know","questioning","fascination","nosiness",
+      "thirst for knowledge","inquiring mind","wanting to know","hungry to learn","poking around","looking into"
+    ],
+    "negators": ["indifference","disinterest","apathy","uninterested","bored"]
+  },
+  "pride": {
+    "tribe": "ByteBloom",
+    "synonyms": [
+      "self-respect","dignity","honor","confidence","self-esteem","self-worth","sense of achievement","accomplishment",
+      "proudness","feeling proud","standing tall","holding my head high"
+    ],
+    "negators": ["shame","humility","modesty","self-doubt","embarrassment"]
+  },
+  "shame": {
+    "tribe": "ByteBloom",
+    "synonyms": [
+      "guilt","embarrassment","humiliation","remorse","disgrace","self-consciousness","regret","mortification",
+      "feeling small","red-faced","feeling bad","ashamed"
+    ],
+    "negators": ["pride","confidence","self-assurance","self-respect"]
+  }
 }
