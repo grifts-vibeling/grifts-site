@@ -15,6 +15,19 @@ body {
   text-align: center;
 }
 
+/* Visually hidden helper for accessible labels */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .download-button {
   display: inline-block;
   padding: 10px 20px;
@@ -65,7 +78,55 @@ h1 {
   padding: 30px;
 }
 
-/* Legacy grid (kept for compatibility if used elsewhere) */
+/* ===== Mutation Console Styles ===== */
+#mutation-result {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  margin-top: 1.5rem;
+}
+#mutation-result.show {
+  opacity: 1;
+}
+
+#builder-console img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+/* Skeleton loader */
+.skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.skeleton-line {
+  height: 1em;
+  background: linear-gradient(90deg, #222, #2a2a2a, #222);
+  background-size: 200% 100%;
+  animation: shimmer 1.2s infinite;
+  border-radius: 4px;
+}
+.skeleton-line.w-60 { width: 60%; }
+.skeleton-line.w-40 { width: 40%; }
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Hint and detected text */
+.hint {
+  font-style: italic;
+  color: #aaa;
+}
+.detected {
+  margin-top: 0.5rem;
+  font-size: 0.95rem;
+  color: #ddd;
+}
+
+/* ===== Legacy grid (kept for compatibility if used elsewhere) ===== */
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -193,7 +254,6 @@ footer {
     font-size: 1em;
   }
 }
-
 
 /* ===== Stage 3 Tribe/Vibeling Layout ===== */
 .tribe-group {
