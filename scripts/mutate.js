@@ -9,11 +9,11 @@ document.getElementById('mutation-form').addEventListener('submit', function(e) 
       let matchedTribe = null;
       let matchedEmotions = [];
 
-      // Check each emotion's synonyms against the input
-      for (const [emotion, tribe] of Object.entries(data.map)) {
-        if (data.synonyms[emotion].some(word => input.includes(word))) {
+      // Loop over each emotion in synonyms.json
+      for (const [emotion, info] of Object.entries(data)) {
+        if (info.synonyms.some(word => input.includes(word))) {
           matchedEmotions.push(emotion);
-          if (!matchedTribe) matchedTribe = tribe; // First match sets the tribe
+          if (!matchedTribe) matchedTribe = info.tribe; // First match sets the tribe
         }
       }
 
@@ -26,7 +26,7 @@ document.getElementById('mutation-form').addEventListener('submit', function(e) 
 
       // Step 2: If ByteBloom, look up BloomBug evolution from canon
       if (matchedTribe === 'ByteBloom') {
-        fetch('/data/grifts_canon.json') // adjust path if needed
+        fetch('/data/grifts_canon.json')
           .then(res => res.json())
           .then(canon => {
             // Sort emotions for consistent combo key
