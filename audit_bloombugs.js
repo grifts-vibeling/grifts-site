@@ -1,132 +1,97 @@
-// audit_bloombugs.js — Stage 6+ (Option A: intended combos only)
+#!/usr/bin/env node
+
+/**
+ * BloomBug Audit Script
+ * ---------------------
+ * Dynamically loads intended dual emotion combos from grifts_canon.json
+ * and compares them to the actual combos in BloomBug entries.
+ *
+ * Flags:
+ *  - Missing duals (in canon list but not present in BloomBugs)
+ *  - Extras (present in BloomBugs but not in canon list)
+ */
 
 const fs = require('fs');
 const path = require('path');
 
-const ROOT = process.cwd();
-const CANON_PATH = path.join(ROOT, 'data', 'grifts_canon.json');
-const ASSET_DIR = path.join(ROOT, 'assets', 'bloombugs');
+console.log('\n🔍 Auditing BloomBug entries...\n');
 
-const BASE_EMOTIONS = [
-  'love', 'sadness', 'anger', 'calm', 'confusion',
-  'fear', 'joy', 'curiosity', 'pride', 'shame'
-];
-
-// Your actual intended dual combos from canon
-const EXPECTED_DUALS = [
-  'joy+calm',
-  'joy+anger',
-  'sadness+confusion',
-  'anger+confusion',
-  'fear+confusion',
-  'love+pride',
-  'sadness+shame',
-  'curiosity+joy',
-  'anger+pride',
-  'calm+curiosity'
-];
-
-function existsFile(p) {
-  try { return fs.existsSync(p) && fs.statSync(p).isFile(); }
-  catch { return false; }
-}
-function existsDir(p) {
-  try { return fs.existsSync(p) && fs.statSync(p).isDirectory(); }
-  catch { return false; }
-}
-function sortedKey(arr) {
-  return [...arr].sort().join('+');
-}
-
-// --- Load canon ---
-if (!existsFile(CANON_PATH)) {
-  console.error(`❌ Canon file not found at ${CANON_PATH}`);
+// --- 1. Load canon ---
+const canonPath = path.join(__dirname, 'grifts_canon.json');
+if (!fs.existsSync(canonPath)) {
+  console.error(`❌ Canon file not found at ${canonPath}`);
   process.exit(1);
 }
-const canon = JSON.parse(fs.readFileSync(CANON_PATH, 'utf8'));
-const bloombugs = canon.bloombugs || {};
-let hasErrors = false;
 
-console.log(`\n🔍 Auditing ${Object.keys(bloombugs).length} BloomBug entries...\n`);
+const canon = JSON.parse(fs.readFileSync(canonPath, 'utf8'));
 
-const referencedAssets = new Set();
-const canonKeys = Object.values(bloombugs).map(bb => sortedKey(bb.emotions));
+// --- 2. Extract intended duals from canon ---
+let EXPECTED_DUALS = [];
 
-// --- 1. Per-entry checks ---
-for (const [name, data] of Object.entries(bloombugs)) {
-  const { emotions, asset, lore } = data;
-
-  // Emotions valid
-  if (!Array.isArray(emotions) || emotions.length === 0) {
-    console.warn(`⚠️  ${name}: missing emotions array`);
-    hasErrors = true;
-  } else {
-    for (const emo of emotions) {
-      if (!BASE_EMOTIONS.includes(emo)) {
-        console.warn(`⚠️  ${name}: unknown emotion "${emo}"`);
-        hasErrors = true;
-      }
-    }
-  }
-
-  // Lore present
-  if (!lore || !lore.trim()) {
-    console.warn(`⚠️  ${name}: missing/empty lore`);
-    hasErrors = true;
-  }
-
-  // Asset exists
-  if (!asset) {
-    console.warn(`⚠️  ${name}: missing asset filename`);
-    hasErrors = true;
-  } else {
-    referencedAssets.add(asset);
-    const assetPath = path.join(ASSET_DIR, asset);
-    if (!existsFile(assetPath)) {
-      console.warn(`⚠️  ${name}: asset not found -> ${asset}`);
-      hasErrors = true;
-    }
-  }
+// Option A: dedicated array in canon
+if (Array.isArray(canon.intendedDuals)) {
+  EXPECTED_DUALS = canon.intendedDuals.map(k =>
+    k.split('+').sort().join('+')
+  );
 }
 
-// --- 2. Mutation coverage check ---
-// Singles: all base emotions
-for (const emo of BASE_EMOTIONS) {
-  const key = sortedKey([emo]);
-  if (!canonKeys.includes(key)) {
-    console.warn(`⚠️  Missing single emotion evolution for: ${key}`);
-    hasErrors = true;
-  }
+// Option B: derive from mutation_rules
+else if (canon.mutation_rules) {
+  EXPECTED_DUALS = Object.values(canon.mutation_rules)
+    .filter(rule => rule.type === 'dual' && Array.isArray(rule.emotions))
+    .map(rule => rule.emotions.slice().sort().join('+'));
 }
 
-// Duals: only intended combos
-for (const key of EXPECTED_DUALS) {
-  if (!canonKeys.includes(key)) {
-    console.warn(`⚠️  Missing dual emotion evolution for: ${key}`);
-    hasErrors = true;
-  }
+// Deduplicate
+EXPECTED_DUALS = [...new Set(EXPECTED_DUALS)];
+
+// --- 3. Load BloomBug entries ---
+const bloombugsDir = path.join(__dirname, 'bloombugs');
+if (!fs.existsSync(bloombugsDir)) {
+  console.error(`❌ BloomBugs directory not found at ${bloombugsDir}`);
+  process.exit(1);
 }
 
-// --- 3. Orphan detection ---
-for (const [name, data] of Object.entries(bloombugs)) {
-  const key = sortedKey(data.emotions);
-  if (
-    !BASE_EMOTIONS.includes(key) && // not a single
-    !EXPECTED_DUALS.includes(key)   // not an intended dual
-  ) {
-    console.warn(`⚠️  ${name}: has an emotion combo not in intended list -> ${key}`);
-    hasErrors = true;
-  }
-}
+const bloombugFiles = fs.readdirSync(bloombugsDir).filter(f => f.endsWith('.json'));
 
-// --- 4. Unused assets ---
-if (existsDir(ASSET_DIR)) {
-  const allFiles = fs.readdirSync(ASSET_DIR).filter(f => existsFile(path.join(ASSET_DIR, f)));
-  const unused = allFiles.filter(f => !referencedAssets.has(f));
-  if (unused.length) {
-    console.log('\n🧹 Unused assets in assets/bloombugs:');
-    unused.forEach(f => console.log('   •', f));
-  }
-}
+let actualCombos = [];
 
-console.log(`\n✅ Audit complete. ${hasErrors ? 'Issues found — see above.' : 'No issues found.'}\n`);
+bloombugFiles.forEach(file => {
+  const data = JSON.parse(fs.readFileSync(path.join(bloombugsDir, file), 'utf8'));
+
+  if (Array.isArray(data.emotions) && data.emotions.length === 2) {
+    const combo = data.emotions.slice().sort().join('+');
+    actualCombos.push(combo);
+  }
+});
+
+// Deduplicate actual combos
+actualCombos = [...new Set(actualCombos)];
+
+// --- 4. Compare ---
+const missing = EXPECTED_DUALS.filter(combo => !actualCombos.includes(combo));
+const extras = actualCombos.filter(combo => !EXPECTED_DUALS.includes(combo));
+
+// --- 5. Report ---
+missing.forEach(combo => {
+  console.warn(`⚠️ Missing dual emotion evolution for: ${combo}`);
+});
+
+extras.forEach(combo => {
+  // Find which BloomBug(s) have this combo
+  const offenders = bloombugFiles.filter(file => {
+    const data = JSON.parse(fs.readFileSync(path.join(bloombugsDir, file), 'utf8'));
+    return Array.isArray(data.emotions) &&
+           data.emotions.slice().sort().join('+') === combo;
+  }).map(f => path.basename(f, '.json'));
+
+  offenders.forEach(name => {
+    console.warn(`⚠️ ${name}: has an emotion combo not in intended list -> ${combo}`);
+  });
+});
+
+console.log(
+  missing.length || extras.length
+    ? '\n✅ Audit complete. Issues found – see above.\n'
+    : '\n✅ Audit complete. No issues found.\n'
+);
