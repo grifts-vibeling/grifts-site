@@ -54,5 +54,42 @@
   "optimism": {
     "tribe": "ByteBloom",
     "synonyms": ["hopefulness", "positive outlook"]
+  },
+
+  "love": {
+    "tribe": "ByteBloom",
+    "synonyms": ["affection", "fondness", "devotion", "adoration"]
+  },
+  "sadness": {
+    "tribe": "ByteBloom",
+    "synonyms": ["sorrow", "unhappiness", "melancholy", "grief"]
+  },
+  "calm": {
+    "tribe": "ByteBloom",
+    "synonyms": ["peace", "serenity", "tranquility", "relaxation"]
+  },
+  "confusion": {
+    "tribe": "ByteBloom",
+    "synonyms": ["bewilderment", "uncertainty", "perplexity", "puzzlement"]
+  },
+  "fear": {
+    "tribe": "ByteBloom",
+    "synonyms": ["terror", "anxiety", "dread", "apprehension"]
+  },
+  "joy": {
+    "tribe": "ByteBloom",
+    "synonyms": ["happiness", "delight", "elation", "glee"]
+  },
+  "curiosity": {
+    "tribe": "ByteBloom",
+    "synonyms": ["inquisitiveness", "interest", "wonder", "exploration"]
+  },
+  "pride": {
+    "tribe": "ByteBloom",
+    "synonyms": ["self-respect", "dignity", "honor", "confidence"]
+  },
+  "shame": {
+    "tribe": "ByteBloom",
+    "synonyms": ["guilt", "embarrassment", "humiliation", "remorse"]
   }
 }
