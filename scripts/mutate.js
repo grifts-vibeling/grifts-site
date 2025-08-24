@@ -44,7 +44,11 @@ document.getElementById('mutation-form').addEventListener('submit', function (e)
         if (b[i - 1] === a[j - 1]) {
           m[i][j] = m[i - 1][j - 1];
         } else {
-          m[i][j] = Math.min(m[i - 1][j - 1] + 1, m[i][j - 1] + 1, m[i - 1][j] + 1);
+          m[i][j] = Math.min(
+            m[i - 1][j - 1] + 1,
+            m[i][j - 1] + 1,
+            m[i - 1][j] + 1
+          );
         }
       }
     }
@@ -100,7 +104,9 @@ document.getElementById('mutation-form').addEventListener('submit', function (e)
             const key = matchedEmotions.slice().sort().join('+');
             const entries = Object.entries(canon.bloombugs || {});
             const match = entries.find(
-              ([, bug]) => Array.isArray(bug.emotions) && bug.emotions.slice().sort().join('+') === key
+              ([, bug]) =>
+                Array.isArray(bug.emotions) &&
+                bug.emotions.slice().sort().join('+') === key
             );
 
             if (match) {
