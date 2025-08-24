@@ -1,5 +1,4 @@
-// audit_bloombugs.js
-// Run with: node audit_bloombugs.js
+// audit_bloombugs.js — Stage 6+ (Option A: intended combos only)
 
 const fs = require('fs');
 const path = require('path');
@@ -13,7 +12,20 @@ const BASE_EMOTIONS = [
   'fear', 'joy', 'curiosity', 'pride', 'shame'
 ];
 
-// --- Helpers ---
+// Your actual intended dual combos from canon
+const EXPECTED_DUALS = [
+  'joy+calm',
+  'joy+anger',
+  'sadness+confusion',
+  'anger+confusion',
+  'fear+confusion',
+  'love+pride',
+  'sadness+shame',
+  'curiosity+joy',
+  'anger+pride',
+  'calm+curiosity'
+];
+
 function existsFile(p) {
   try { return fs.existsSync(p) && fs.statSync(p).isFile(); }
   catch { return false; }
@@ -21,6 +33,9 @@ function existsFile(p) {
 function existsDir(p) {
   try { return fs.existsSync(p) && fs.statSync(p).isDirectory(); }
   catch { return false; }
+}
+function sortedKey(arr) {
+  return [...arr].sort().join('+');
 }
 
 // --- Load canon ---
@@ -34,9 +49,10 @@ let hasErrors = false;
 
 console.log(`\n🔍 Auditing ${Object.keys(bloombugs).length} BloomBug entries...\n`);
 
-// --- 1. Per-entry checks ---
 const referencedAssets = new Set();
+const canonKeys = Object.values(bloombugs).map(bb => sortedKey(bb.emotions));
 
+// --- 1. Per-entry checks ---
 for (const [name, data] of Object.entries(bloombugs)) {
   const { emotions, asset, lore } = data;
 
@@ -74,34 +90,17 @@ for (const [name, data] of Object.entries(bloombugs)) {
 }
 
 // --- 2. Mutation coverage check ---
-function sortedKey(arr) {
-  return [...arr].sort().join('+');
-}
-
-// Expected singles
-const expectedSingles = BASE_EMOTIONS.map(e => sortedKey([e]));
-
-// Expected duals (all unique pairs)
-const expectedDuals = [];
-for (let i = 0; i < BASE_EMOTIONS.length; i++) {
-  for (let j = i + 1; j < BASE_EMOTIONS.length; j++) {
-    expectedDuals.push(sortedKey([BASE_EMOTIONS[i], BASE_EMOTIONS[j]]));
-  }
-}
-
-// Filter to only combos actually in canon
-const canonKeys = Object.values(bloombugs).map(bb => sortedKey(bb.emotions));
-
-// Check singles
-for (const key of expectedSingles) {
+// Singles: all base emotions
+for (const emo of BASE_EMOTIONS) {
+  const key = sortedKey([emo]);
   if (!canonKeys.includes(key)) {
     console.warn(`⚠️  Missing single emotion evolution for: ${key}`);
     hasErrors = true;
   }
 }
 
-// Check duals
-for (const key of expectedDuals) {
+// Duals: only intended combos
+for (const key of EXPECTED_DUALS) {
   if (!canonKeys.includes(key)) {
     console.warn(`⚠️  Missing dual emotion evolution for: ${key}`);
     hasErrors = true;
@@ -111,8 +110,11 @@ for (const key of expectedDuals) {
 // --- 3. Orphan detection ---
 for (const [name, data] of Object.entries(bloombugs)) {
   const key = sortedKey(data.emotions);
-  if (!expectedSingles.includes(key) && !expectedDuals.includes(key)) {
-    console.warn(`⚠️  ${name}: has an emotion combo not in expected singles/duals list -> ${key}`);
+  if (
+    !BASE_EMOTIONS.includes(key) && // not a single
+    !EXPECTED_DUALS.includes(key)   // not an intended dual
+  ) {
+    console.warn(`⚠️  ${name}: has an emotion combo not in intended list -> ${key}`);
     hasErrors = true;
   }
 }
