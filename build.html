@@ -10,11 +10,24 @@
   <section id="builder-console">
     <h1>Feel the Mutation</h1>
     <p>Type how you feel. We’ll match your vibe to a tribe and evolution.</p>
+
     <form id="mutation-form">
-      <input type="text" id="emotion-input" placeholder="e.g. I feel peaceful and happy" required />
+      <label for="emotion-input" class="visually-hidden">
+        Describe your feeling
+      </label>
+      <input
+        type="text"
+        id="emotion-input"
+        placeholder="e.g. I feel peaceful and happy"
+        autocomplete="off"
+        required
+      />
       <button type="submit">Mutate Me</button>
     </form>
-    <div id="mutation-result"></div>
+
+    <!-- aria-live ensures screen readers announce changes -->
+    <div id="mutation-result" aria-live="polite"></div>
+
     <script src="scripts/mutate.js"></script>
   </section>
 </body>
