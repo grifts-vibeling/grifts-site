@@ -2,31 +2,60 @@ document.getElementById('mutation-form').addEventListener('submit', function(e) 
   e.preventDefault();
   const input = document.getElementById('emotion-input').value.toLowerCase();
 
+  // Step 1: Fetch synonyms mapping to detect emotions + tribe
   fetch('/emotion-data/synonyms.json')
     .then(res => res.json())
     .then(data => {
       let matchedTribe = null;
-      let matchedBug = null;
+      let matchedEmotions = [];
 
+      // Check each emotion's synonyms against the input
       for (const [emotion, tribe] of Object.entries(data.map)) {
         if (data.synonyms[emotion].some(word => input.includes(word))) {
-          matchedTribe = tribe;
-          matchedBug = data.bloombugs?.[emotion] || null;
-          break;
+          matchedEmotions.push(emotion);
+          if (!matchedTribe) matchedTribe = tribe; // First match sets the tribe
         }
       }
 
       const resultDiv = document.getElementById('mutation-result');
-      if (matchedTribe) {
+
+      if (!matchedTribe) {
+        resultDiv.innerHTML = `<p>No match found. Try a different phrase.</p>`;
+        return;
+      }
+
+      // Step 2: If ByteBloom, look up BloomBug evolution from canon
+      if (matchedTribe === 'ByteBloom') {
+        fetch('/data/grifts_canon.json') // adjust path if needed
+          .then(res => res.json())
+          .then(canon => {
+            // Sort emotions for consistent combo key
+            const key = matchedEmotions.slice().sort().join('+');
+
+            // Find matching BloomBug evolution
+            const evo = Object.values(canon.bloombugs).find(bug =>
+              bug.emotions.slice().sort().join('+') === key
+            );
+
+            if (evo) {
+              resultDiv.innerHTML = `
+                <h2>Your Tribe: ${matchedTribe}</h2>
+                <img src="/assets/bloombugs/${evo.asset}" alt="${evo.name}" />
+                <p><strong>${evo.name}</strong>: ${evo.lore}</p>
+              `;
+            } else {
+              resultDiv.innerHTML = `
+                <h2>Your Tribe: ${matchedTribe}</h2>
+                <p>No BloomBug evolution found for: ${key}</p>
+              `;
+            }
+          });
+      } else {
+        // Step 3: Non-BloomBug tribes — just show the tribe
         resultDiv.innerHTML = `
           <h2>Your Tribe: ${matchedTribe}</h2>
-          ${matchedBug ? `
-            <img src="/assets/bloombugs/${matchedBug.image}" alt="${matchedBug.name}" />
-            <p><strong>${matchedBug.name}</strong>: ${matchedBug.lore}</p>
-          ` : `<p>No evolution found, but your vibe is strong.</p>`}
+          <p>This tribe has its own Vibelings — no BloomBug evolution.</p>
         `;
-      } else {
-        resultDiv.innerHTML = `<p>No match found. Try a different phrase.</p>`;
       }
     });
 });
