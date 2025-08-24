@@ -3,12 +3,8 @@
 /**
  * BloomBug Audit Script
  * ---------------------
- * Dynamically loads intended dual emotion combos from data/grifts_canon.json
- * and compares them to the actual combos in BloomBug entries.
- *
- * Flags:
- *  - Missing duals (in canon list but not present in BloomBugs)
- *  - Extras (present in BloomBugs but not in canon list)
+ * Loads intended dual emotion combos from data/grifts_canon.json
+ * and compares them to the actual combos in assets/bloombugs/*.json
  */
 
 const fs = require('fs');
@@ -28,25 +24,20 @@ const canon = JSON.parse(fs.readFileSync(canonPath, 'utf8'));
 // --- 2. Extract intended duals from canon ---
 let EXPECTED_DUALS = [];
 
-// Option A: dedicated array in canon
 if (Array.isArray(canon.intendedDuals)) {
   EXPECTED_DUALS = canon.intendedDuals.map(k =>
     k.split('+').sort().join('+')
   );
-}
-
-// Option B: derive from mutation_rules
-else if (canon.mutation_rules) {
+} else if (canon.mutation_rules) {
   EXPECTED_DUALS = Object.values(canon.mutation_rules)
     .filter(rule => rule.type === 'dual' && Array.isArray(rule.emotions))
     .map(rule => rule.emotions.slice().sort().join('+'));
 }
 
-// Deduplicate
 EXPECTED_DUALS = [...new Set(EXPECTED_DUALS)];
 
 // --- 3. Load BloomBug entries ---
-const bloombugsDir = path.join(__dirname, 'bloombugs');
+const bloombugsDir = path.join(__dirname, 'assets', 'bloombugs');
 if (!fs.existsSync(bloombugsDir)) {
   console.error(`❌ BloomBugs directory not found at ${bloombugsDir}`);
   process.exit(1);
@@ -58,14 +49,12 @@ let actualCombos = [];
 
 bloombugFiles.forEach(file => {
   const data = JSON.parse(fs.readFileSync(path.join(bloombugsDir, file), 'utf8'));
-
   if (Array.isArray(data.emotions) && data.emotions.length === 2) {
     const combo = data.emotions.slice().sort().join('+');
     actualCombos.push(combo);
   }
 });
 
-// Deduplicate actual combos
 actualCombos = [...new Set(actualCombos)];
 
 // --- 4. Compare ---
@@ -78,7 +67,6 @@ missing.forEach(combo => {
 });
 
 extras.forEach(combo => {
-  // Find which BloomBug(s) have this combo
   const offenders = bloombugFiles.filter(file => {
     const data = JSON.parse(fs.readFileSync(path.join(bloombugsDir, file), 'utf8'));
     return Array.isArray(data.emotions) &&
