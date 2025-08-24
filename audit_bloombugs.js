@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 
 // CONFIG — adjust if your paths differ
-const CANON_PATH = path.join(__dirname, 'grifts_canon.json');
+const CANON_PATH = path.join(__dirname, 'data', 'grifts_canon.json');
 const ASSET_DIR = path.join(__dirname, 'assets', 'bloombugs');
 
 // Expected base emotions (must match synonyms.json keys exactly)
