@@ -1,25 +1,31 @@
 #!/usr/bin/env node
 
 /**
- * Stage 6 Final Sweep — Fully Canon‑Driven + Auto‑Discovery
- * Works with Nathan's repo structure
+ * Stage 6 Final Sweep — Canon‑Driven + Auto‑Discovery + Interactive Auto‑Heal
+ * Nathan's repo edition
  */
 
 const fs = require('fs');
 const path = require('path');
+const readline = require('readline');
 
-// === CONFIG ===
 const canonPath = path.join(__dirname, 'data', 'grifts_canon.json');
 const assetBaseDir = path.join(__dirname, 'assets');
+const autoHeal = process.argv.includes('--auto-heal');
 
-// === LOAD CANON ===
 if (!fs.existsSync(canonPath)) {
   console.error(`❌ Canon file not found at ${canonPath}`);
   process.exit(1);
 }
 const canon = JSON.parse(fs.readFileSync(canonPath, 'utf8'));
 
-// === FUZZY MATCH HELPER ===
+// === Interactive prompt ===
+const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+function ask(question) {
+  return new Promise(resolve => rl.question(question, ans => resolve(ans.trim().toLowerCase())));
+}
+
+// === Helpers ===
 function levenshtein(a, b) {
   const matrix = Array.from({ length: b.length + 1 }, (_, i) => [i]);
   for (let j = 0; j <= a.length; j++) matrix[0][j] = j;
@@ -54,8 +60,13 @@ function suggestMatches(missing, extras) {
   return suggestions;
 }
 
-// === CATEGORY CHECK ===
-function checkCategory(categoryName, assetFolder) {
+function findAssetFile(dir, baseName) {
+  const files = fs.readdirSync(dir);
+  return files.find(f => path.basename(f, path.extname(f)).toLowerCase() === baseName.toLowerCase()) || '';
+}
+
+// === Category Check ===
+async function checkCategory(categoryName, assetFolder) {
   console.log(`\n=== ${categoryName.toUpperCase()} CHECK ===`);
 
   const canonIDs = Object.keys(canon[categoryName] || {});
@@ -88,9 +99,35 @@ function checkCategory(categoryName, assetFolder) {
       console.log(`  Canon: ${s.canon} ↔ Asset: ${s.asset} (distance ${s.distance})`)
     );
   }
+
+  // === Interactive Auto‑Heal ===
+  if (autoHeal) {
+    for (const s of fuzzySuggestions) {
+      const oldFile = findAssetFile(dirPath, s.asset);
+      if (!oldFile) continue;
+      const oldPath = path.join(dirPath, oldFile);
+      const ext = path.extname(oldFile);
+      const newPath = path.join(dirPath, s.canon + ext);
+
+      const ans = await ask(`Rename "${oldFile}" → "${s.canon + ext}"? (y/n) `);
+      if (ans === 'y') {
+        fs.renameSync(oldPath, newPath);
+        console.log(`  🔄 Renamed: ${oldFile} → ${s.canon + ext}`);
+      }
+    }
+
+    for (const id of missingAssets) {
+      const placeholderPath = path.join(dirPath, id + '.png');
+      const ans = await ask(`Create placeholder for missing "${id}.png"? (y/n) `);
+      if (ans === 'y') {
+        fs.writeFileSync(placeholderPath, '');
+        console.log(`  🆕 Created placeholder: ${id}.png`);
+      }
+    }
+  }
 }
 
-// === DUALS CHECK ===
+// === Duals Check ===
 function checkDuals() {
   console.log(`\n=== DUALS CHECK ===`);
   let missingDuals = [];
@@ -106,28 +143,20 @@ function checkDuals() {
   if (missingDuals.length) console.log(missingDuals.join(', '));
 }
 
-// === COMBOS CHECK ===
+// === Combos Check ===
 function checkCombos() {
   console.log(`\n=== COMBOS CHECK ===`);
   let missingCombos = [];
-  let extraCombos = [];
 
   Object.entries(canon).forEach(([category, items]) => {
     if (typeof items !== 'object') return;
     Object.entries(items).forEach(([id, data]) => {
-      if (data.emotions && data.emotions.length === 2) {
-        const combo = data.emotions.slice().sort().join('+');
-        // Build expected combos from canon
-        const allCanonCombos = Object.values(canon)
-          .filter(v => typeof v === 'object')
-          .flatMap(obj =>
-            Object.values(obj)
-              .filter(e => e.emotions && e.emotions.length === 2)
-              .map(e => e.emotions.slice().sort().join('+'))
-          );
-        if (!allCanonCombos.includes(combo)) {
-          missingCombos.push(`${id} → ${combo}`);
-        }
+      if (data.combos) {
+        data.combos.forEach(combo => {
+          if (!canon[category][combo]) {
+            missingCombos.push(`${id} → ${combo}`);
+          }
+        });
       }
     });
   });
@@ -136,7 +165,7 @@ function checkCombos() {
   if (missingCombos.length) console.log(missingCombos.join(', '));
 }
 
-// === AUTO‑DISCOVER CATEGORIES ===
+// === Auto‑Discover Categories ===
 function discoverCategories() {
   const discovered = {};
   Object.keys(canon).forEach(category => {
@@ -148,20 +177,23 @@ function discoverCategories() {
   return discovered;
 }
 
-// === RUN ALL CHECKS ===
-console.log('=== Stage 6 Final Sweep (Canon‑Driven + Auto‑Discovery) ===');
+// === Run Sweep ===
+(async () => {
+  console.log(`=== Stage 6 Final Sweep (Canon‑Driven + Auto‑Discovery${autoHeal ? ' + Interactive Auto‑Heal' : ''}) ===`);
 
-const categoryMap = discoverCategories();
+  const categoryMap = discoverCategories();
 
-if (Object.keys(categoryMap).length === 0) {
-  console.log('No matching asset folders found for canon categories.');
-} else {
-  Object.entries(categoryMap).forEach(([canonKey, folderName]) => {
-    checkCategory(canonKey, folderName);
-  });
-}
+  if (Object.keys(categoryMap).length === 0) {
+    console.log('No matching asset folders found for canon categories.');
+  } else {
+    for (const [canonKey, folderName] of Object.entries(categoryMap)) {
+      await checkCategory(canonKey, folderName);
+    }
+  }
 
-checkDuals();
-checkCombos();
+  checkDuals();
+  checkCombos();
 
-console.log('\nStage 6 sweep complete.');
+  rl.close();
+  console.log(`\nStage 6 sweep complete.${autoHeal ? ' Auto‑heal session ended.' : ''}`);
+})();
