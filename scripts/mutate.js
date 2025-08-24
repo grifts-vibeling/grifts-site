@@ -1,19 +1,66 @@
 document.getElementById('mutation-form').addEventListener('submit', function(e) {
   e.preventDefault();
-  const input = document.getElementById('emotion-input').value.toLowerCase();
+  const input = document.getElementById('emotion-input').value;
 
-  // Step 1: Fetch synonyms mapping to detect emotions + tribe
+  // --- Normalisation ---
+  function normalise(str) {
+    return str
+      .toLowerCase()
+      .replace(/[^\p{L}\p{N}\s]+/gu, '') // remove punctuation/symbols
+      .replace(/\s+/g, ' ')               // collapse multiple spaces
+      .trim();
+  }
+
+  // --- Levenshtein distance ---
+  function levenshtein(a, b) {
+    const matrix = Array.from({ length: b.length + 1 }, (_, i) => [i]);
+    for (let j = 0; j <= a.length; j++) matrix[0][j] = j;
+
+    for (let i = 1; i <= b.length; i++) {
+      for (let j = 1; j <= a.length; j++) {
+        if (b[i - 1] === a[j - 1]) {
+          matrix[i][j] = matrix[i - 1][j - 1];
+        } else {
+          matrix[i][j] = Math.min(
+            matrix[i - 1][j - 1] + 1, // substitution
+            matrix[i][j - 1] + 1,     // insertion
+            matrix[i - 1][j] + 1      // deletion
+          );
+        }
+      }
+    }
+    return matrix[b.length][a.length];
+  }
+
+  function fuzzyWordMatch(wordA, wordB, maxDistance = 1) {
+    return levenshtein(wordA, wordB) <= maxDistance;
+  }
+
   fetch('/emotion-data/synonyms.json')
     .then(res => res.json())
     .then(data => {
       let matchedTribe = null;
       let matchedEmotions = [];
 
-      // Loop over each emotion in synonyms.json
+      const normalisedInput = normalise(input);
+      const inputWords = normalisedInput.split(' ');
+
       for (const [emotion, info] of Object.entries(data)) {
-        if (info.synonyms.some(word => input.includes(word))) {
+        const synMatched = info.synonyms.some(syn => {
+          const synWords = normalise(syn).split(' ');
+          // Every word in synonym must appear in input (order‑agnostic, fuzzy)
+          const allWordsPresent = synWords.every(synWord =>
+            inputWords.some(inputWord => fuzzyWordMatch(inputWord, synWord))
+          );
+          // Negator check (per‑emotion list if provided, else global)
+          const negators = info.negators || [];
+          const hasNegator = inputWords.some(w => negators.includes(w));
+          return allWordsPresent && !hasNegator;
+        });
+
+        if (synMatched) {
           matchedEmotions.push(emotion);
-          if (!matchedTribe) matchedTribe = info.tribe; // First match sets the tribe
+          if (!matchedTribe) matchedTribe = info.tribe;
         }
       }
 
@@ -24,15 +71,11 @@ document.getElementById('mutation-form').addEventListener('submit', function(e) 
         return;
       }
 
-      // Step 2: If ByteBloom, look up BloomBug evolution from canon
       if (matchedTribe === 'ByteBloom') {
         fetch('/data/grifts_canon.json')
           .then(res => res.json())
           .then(canon => {
-            // Sort emotions for consistent combo key
             const key = matchedEmotions.slice().sort().join('+');
-
-            // Find matching BloomBug evolution
             const evo = Object.values(canon.bloombugs).find(bug =>
               bug.emotions.slice().sort().join('+') === key
             );
@@ -51,7 +94,6 @@ document.getElementById('mutation-form').addEventListener('submit', function(e) 
             }
           });
       } else {
-        // Step 3: Non-BloomBug tribes — just show the tribe
         resultDiv.innerHTML = `
           <h2>Your Tribe: ${matchedTribe}</h2>
           <p>This tribe has its own Vibelings — no BloomBug evolution.</p>
